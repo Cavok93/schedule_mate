@@ -23,16 +23,9 @@ class CalendarStateSelector<T>
         );
 }
 
-class NumberOfSchedulesSelector extends CalendarStateSelector<int> {
-  NumberOfSchedulesSelector(Widget Function(int) builder, {super.key})
-      : super(
-          selector: (state) => state.schedules.length,
-          builder: builder,
-        );
-}
-
-class CalendarSelectors extends CalendarStateSelector<List<Schedule>> {
-  CalendarSelectors(Widget Function(List<Schedule>) builder, {super.key})
+class CalendarSchedulesSelector extends CalendarStateSelector<List<Schedule>> {
+  CalendarSchedulesSelector(Widget Function(List<Schedule>) builder,
+      {super.key})
       : super(
           selector: (state) => state.schedules,
           builder: builder,
@@ -69,11 +62,9 @@ class CalendarSelector extends CalendarStateSelector<CalendarSelectorState> {
 
 class CalendarSelectorState extends Equatable {
   final Schedule schedule;
-
   const CalendarSelectorState(
     this.schedule,
   );
-
   @override
   List<Object> get props => [schedule.id ?? 0];
 }

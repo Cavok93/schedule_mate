@@ -14,17 +14,20 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<GetSchedulesEvent>(_getSchedules);
     on<UpdateScheduleEvent>(_updateSchedule);
     on<DeleteScheduleEvent>(_deleteSchedule);
+    on<SelectSchedulesEvent>(_selectSchedules);
+  }
+
+  void _selectSchedules(
+      SelectSchedulesEvent event, Emitter<ScheduleState> emit) {
+    emit(state.copyWith(selectedSchedules: event.schedules));
   }
 
   Future<void> _createSchedule(
       CreateScheduleEvent event, Emitter<ScheduleState> emit) async {
-    emit(state.copyWith(status: ScheduleStateStatus.loading));
-
     try {
       await scheduleUseCases.createScheduleUseCase(event.schedule);
       final schedules = await scheduleUseCases.getSchedulesUseCase();
-      emit(state.copyWith(
-          status: ScheduleStateStatus.loadSuccess, schedules: schedules));
+      emit(state.copyWith(schedules: schedules));
     } on Exception catch (e) {
       log("$e");
       emit(state.copyWith(status: ScheduleStateStatus.loadFailure, error: e));
@@ -46,13 +49,12 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
   Future<void> _updateSchedule(
       UpdateScheduleEvent event, Emitter<ScheduleState> emit) async {
-    emit(state.copyWith(status: ScheduleStateStatus.loading));
-
     try {
-      await scheduleUseCases.updateScheduleUseCase(event.schedule);
+      final newSelectedSchdules = await scheduleUseCases.updateScheduleUseCase(
+          event.schedule, state.selectedSchedules);
       final schedules = await scheduleUseCases.getSchedulesUseCase();
       emit(state.copyWith(
-          status: ScheduleStateStatus.loadSuccess, schedules: schedules));
+          schedules: schedules, selectedSchedules: newSelectedSchdules));
     } on Exception catch (e) {
       log("$e");
       emit(state.copyWith(status: ScheduleStateStatus.loadFailure, error: e));
@@ -61,13 +63,13 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
   Future<void> _deleteSchedule(
       DeleteScheduleEvent event, Emitter<ScheduleState> emit) async {
-    emit(state.copyWith(status: ScheduleStateStatus.loading));
-
     try {
-      await scheduleUseCases.deleteScheduleUseCase(event.id);
+      final newSelectedSchdules = await scheduleUseCases.deleteScheduleUseCase(
+          event.id, state.selectedSchedules);
       final schedules = await scheduleUseCases.getSchedulesUseCase();
+      await Future.delayed(Duration(milliseconds: 1000));
       emit(state.copyWith(
-          status: ScheduleStateStatus.loadSuccess, schedules: schedules));
+          schedules: schedules, selectedSchedules: newSelectedSchdules));
     } on Exception catch (e) {
       log("$e");
       emit(state.copyWith(status: ScheduleStateStatus.loadFailure, error: e));

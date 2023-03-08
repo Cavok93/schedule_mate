@@ -1,4 +1,4 @@
-class CalendarConstants {
+class CalendarElemetOptions {
   static const int kDistanceBetweenEventsCoef = 34;
   static const int kMaxWeekPerMoth = 6;
   static const int kWeekDaysCount = 7;

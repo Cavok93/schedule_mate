@@ -1,22 +1,29 @@
-part of 'theme_cubit.dart';
+part of 'app_theme_cubit.dart';
 
-enum ThemeStateStatus { initial, loading, loaded }
+enum AppThemeStateStatus {
+  initial,
+  loading,
+  loadSuccess,
+  loadFailure,
+}
 
-class ThemeState extends Equatable {
+class AppThemeState extends Equatable {
   final List<AppTheme> appThemes;
-  final AppTheme selectedThems;
-  final ThemeStateStatus status;
+  final AppTheme selectedTheme;
+  final AppThemeStateStatus status;
+  final Exception? error;
 
-  const ThemeState({
+  const AppThemeState({
     required this.appThemes,
-    required this.selectedThems,
+    required this.selectedTheme,
     required this.status,
+    this.error,
   });
 
-  factory ThemeState.initial() {
-    return ThemeState(
-      status: ThemeStateStatus.initial,
-      selectedThems: AppTheme(
+  factory AppThemeState.initial() {
+    return AppThemeState(
+      status: AppThemeStateStatus.initial,
+      selectedTheme: AppTheme(
           name: "맨디 레드",
           themeData: FlexThemeData.light(scheme: FlexScheme.mandyRed),
           id: 1),
@@ -142,17 +149,19 @@ class ThemeState extends Equatable {
   }
 
   @override
-  List<Object> get props => [appThemes, selectedThems, status];
+  List<Object> get props => [appThemes, selectedTheme, status];
 
-  ThemeState copyWith({
+  AppThemeState copyWith({
     List<AppTheme>? appThemes,
     AppTheme? selectedThems,
-    ThemeStateStatus? status,
+    AppThemeStateStatus? status,
+    Exception? error,
   }) {
-    return ThemeState(
+    return AppThemeState(
       appThemes: appThemes ?? this.appThemes,
-      selectedThems: selectedThems ?? this.selectedThems,
+      selectedTheme: selectedThems ?? this.selectedTheme,
       status: status ?? this.status,
+      error: error ?? this.error,
     );
   }
 }

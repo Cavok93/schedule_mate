@@ -7,12 +7,11 @@ import '../../../../core/enums/week_day.dart';
 import '../../../../states/calendar/calendar_bloc.dart';
 import '../../../../states/schedule/schedule_bloc.dart';
 import '../../../../states/schedule/schedule_selector.dart';
-import '../widgets/calendar_header.dart';
+import '../widgets/week_row.dart';
 import '../widgets/calender_body.dart';
 
 class Calendar extends StatefulWidget {
   final PageController pageController;
-
   final int initialPage;
   final int pageCount;
   const Calendar(
@@ -52,7 +51,7 @@ class _CalendarState extends State<Calendar> {
   Widget _buildCalendar() {
     return Column(
       children: [
-        const CalendarHeader(),
+        const WeekRow(),
         Expanded(
           child: PageView.builder(
               onPageChanged: (currentPage) {
@@ -65,6 +64,7 @@ class _CalendarState extends State<Calendar> {
               controller: widget.pageController,
               itemCount: widget.pageCount,
               scrollDirection: Axis.vertical,
+              // scrollDirection: Axis.horizontal,
               itemBuilder: (context, pageIndex) {
                 final int offset = pageIndex - widget.initialPage;
                 final displayMonth =

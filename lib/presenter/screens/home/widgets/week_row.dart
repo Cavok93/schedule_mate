@@ -5,8 +5,8 @@ import '../../../../configs/constants.dart';
 import '../../../../core/enums/week_day.dart';
 import '../../../../core/utils/calendar_utils.dart';
 
-class CalendarHeader extends StatelessWidget {
-  const CalendarHeader({super.key});
+class WeekRow extends StatelessWidget {
+  const WeekRow({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class CalendarHeader extends StatelessWidget {
           DateItemStore().dateItemProperties.startWeekDay);
       return Container(
           padding: const EdgeInsets.all(4),
-          height: CalendarConstants.kWeekHeaderHeight,
+          height: CalendarElemetOptions.kWeekHeaderHeight,
           child: FittedBox(
             fit: BoxFit.fitHeight,
             child: Center(

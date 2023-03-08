@@ -3,12 +3,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:today_mate_clean/presenter/screens/home/widgets/schedule_sheet.dart';
+import 'package:today_mate_clean/presenter/modals/schedules_modal.dart';
+
 import 'package:today_mate_clean/states/calendar/calendar_bloc.dart';
 import 'package:today_mate_clean/states/schedule/schedule_bloc.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../../../configs/constants.dart';
+import '../../../../configs/routes.dart';
 import '../../../../core/utils/calendar_utils.dart';
 import '../../../../domain/entities/calendar/drawers.dart';
 import '../../../../domain/entities/calendar/event_counts.dart';
@@ -41,9 +43,9 @@ class CalendarCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final overflowedEvents = NotFittedPageEventCount();
     final colorScheme = Theme.of(context).colorScheme;
-    return CalendarSelectors((events) {
+    return CalendarSchedulesSelector((events) {
       final drawersForWeek = <List<EventProperties>>[];
-      for (int week = 0; week < CalendarConstants.kMaxWeekPerMoth; week++) {
+      for (int week = 0; week < CalendarElemetOptions.kMaxWeekPerMoth; week++) {
         final drawers = <EventProperties>[];
         final beginDate = Jiffy(begin).add(weeks: week);
         final endDate = Jiffy(beginDate).add(days: 7 - 1);
@@ -60,7 +62,7 @@ class CalendarCell extends StatelessWidget {
           CalendarUtils.calculateOverflowedEvents(drawersForWeek, maxLines);
 
       final weeks = List.generate(
-        CalendarConstants.kMaxWeekPerMoth,
+        CalendarElemetOptions.kMaxWeekPerMoth,
         (index) => Row(
           children: _buildDays(
               week: index,
@@ -92,8 +94,8 @@ class CalendarCell extends StatelessWidget {
       required NotFittedPageEventCount overflowedEvents,
       required BuildContext context,
       required ColorScheme colorScheme}) {
-    final days = List.generate(CalendarConstants.kWeekDaysCount, (i) {
-      final index = week * CalendarConstants.kWeekDaysCount + i;
+    final days = List.generate(CalendarElemetOptions.kWeekDaysCount, (i) {
+      final index = week * CalendarElemetOptions.kWeekDaysCount + i;
       Tuple2<int, bool> day = const Tuple2(0, false);
       final consideringPrevMonth = begin.date + index;
       if (consideringPrevMonth <= begin.daysInMonth && begin.date != 1) {
@@ -107,28 +109,31 @@ class CalendarCell extends StatelessWidget {
         }
       }
 
-      final column = index % CalendarConstants.kWeekDaysCount;
-      final row = index ~/ CalendarConstants.kWeekDaysCount;
+      final column = index % CalendarElemetOptions.kWeekDaysCount;
+      final row = index ~/ CalendarElemetOptions.kWeekDaysCount;
       final notFittedEventsCount =
           overflowedEvents.weeks[row].eventCount[column];
 
       final lineHeight = (itemHeight - topPadding) / maxLines;
 
       final height = lineHeight -
-          itemHeight / CalendarConstants.kDistanceBetweenEventsCoef;
+          itemHeight / CalendarElemetOptions.kDistanceBetweenEventsCoef;
       final double emptySpace =
-          itemHeight - topPadding - (height * CalendarConstants.kMaxLines);
-      final double singleSpace = emptySpace / CalendarConstants.kMaxLines;
+          itemHeight - topPadding - (height * CalendarElemetOptions.kMaxLines);
+      final double singleSpace = emptySpace / CalendarElemetOptions.kMaxLines;
+      final currentDate = Jiffy(begin).add(days: index);
+
       return GestureDetector(
         onTap: () {
-          final tappedDate = Jiffy(begin).add(days: index);
           context
               .read<CalendarBloc>()
-              .add(SelectDateEvent(selectedDate: tappedDate.dateTime));
-          final events = CalendarUtils.calculateAvailableEventsForDate(
-              eventList, tappedDate);
-          _showDayEventsInModalSheet(
-              context: context, day: tappedDate.dateTime, events: events);
+              .add(SelectDateEvent(selectedDate: currentDate.dateTime));
+          final targetEvents = CalendarUtils.calculateAvailableEventsForDate(
+              eventList, currentDate);
+          _showSchdulesModal(
+              context: context,
+              day: currentDate.dateTime,
+              events: targetEvents);
         },
         child: Container(
           width: itemWidth,
@@ -185,8 +190,23 @@ class CalendarCell extends StatelessWidget {
                           border: Border.all(
                               width: 1.4, color: colorScheme.primary))
                       : null,
+                  alignment: Alignment.center,
                   height: itemHeight,
                   width: itemWidth,
+                  child: (CalendarUtils.calculateAvailableEventsForDate(
+                                  eventList, currentDate)
+                              .isEmpty &&
+                          isSelected)
+                      ? IconButton(
+                          onPressed: () {
+                            AppNavigator.push(Routes.form, null);
+                          },
+                          color: colorScheme.primary,
+                          icon: const Icon(Icons.add_circle_outline_sharp),
+                          constraints: const BoxConstraints(),
+                          iconSize: itemWidth / 3,
+                        )
+                      : null,
                 );
               })
             ],
@@ -197,13 +217,14 @@ class CalendarCell extends StatelessWidget {
     return days;
   }
 
-  void _showDayEventsInModalSheet(
+  void _showSchdulesModal(
       {required List<Schedule> events,
       required DateTime day,
       required BuildContext context}) {
     if (events.isEmpty) {
       return;
     }
+    context.read<ScheduleBloc>().add(SelectSchedulesEvent(schedules: events));
 
     showModalBottomSheet(
         context: context,
@@ -213,15 +234,11 @@ class CalendarCell extends StatelessWidget {
         ),
         // backgroundColor: Colors.white,
         builder: (context) {
-          return MultiBlocProvider(
-              providers: [
-                BlocProvider.value(
-                  value: context.read<ScheduleBloc>(),
-                ),
-              ],
-              child: ScheduleSheet(
-                schedules: events,
-              ));
+          return MultiBlocProvider(providers: [
+            BlocProvider.value(
+              value: context.read<ScheduleBloc>(),
+            ),
+          ], child: const SchedulesBottomModal());
         });
   }
 }

@@ -14,6 +14,13 @@ class CreateScheduleEvent extends ScheduleEvent {
   });
 }
 
+class SelectSchedulesEvent extends ScheduleEvent {
+  final List<Schedule> schedules;
+  const SelectSchedulesEvent({
+    required this.schedules,
+  });
+}
+
 class GetSchedulesEvent extends ScheduleEvent {}
 
 class UpdateScheduleEvent extends ScheduleEvent {

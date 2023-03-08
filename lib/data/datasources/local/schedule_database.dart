@@ -3,6 +3,11 @@ import 'package:sqflite/sqflite.dart';
 import '../../models/schedule_data.dart';
 
 class ScheduleDataBase {
+  Database? testDatabase;
+  ScheduleDataBase({this.testDatabase}) {
+    _database = testDatabase;
+  }
+
   static const _databaseName = 'schedule_database';
   static const _tableName = 'schedule_table';
   static const _databaseVersion = 1;

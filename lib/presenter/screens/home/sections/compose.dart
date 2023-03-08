@@ -1,26 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:today_mate_clean/domain/entities/calendar/day_props.dart';
+import 'package:today_mate_clean/presenter/modals/date_modal.dart';
 import 'package:today_mate_clean/states/schedule/schedule_bloc.dart';
 
-import '../../../domain/entities/schedule/schedule.dart';
-import '../../../states/calendar/calendar_bloc.dart';
+import '../../../../domain/entities/schedule/schedule.dart';
+import '../../../../states/calendar/calendar_bloc.dart';
 
-class ScheduleFormScreen extends StatefulWidget {
+class ComposeScreen extends StatefulWidget {
   final Schedule? targetSchedule;
 
-  const ScheduleFormScreen({
+  const ComposeScreen({
     super.key,
     required this.targetSchedule,
   });
 
   @override
-  State<ScheduleFormScreen> createState() => _ScheduleFormScreenState();
+  State<ComposeScreen> createState() => _ComposeScreenState();
 }
 
-class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
+class _ComposeScreenState extends State<ComposeScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   late int? _id;
@@ -90,7 +89,6 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                             isCompleted: _isCompleted,
                             level: _level)));
                   }
-
                   Navigator.pop(context);
                 },
                 child: Text(
@@ -121,7 +119,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                     const Text("시작"),
                     TextButton(
                       onPressed: () {
-                        _showDatePicker(context, true, initialDate: _begin);
+                        _showDateModal(context, true, initialDate: _begin);
                       },
                       style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
@@ -141,7 +139,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                     const Text("종료"),
                     TextButton(
                         onPressed: () {
-                          _showDatePicker(context, false, initialDate: _end);
+                          _showDateModal(context, false, initialDate: _end);
                         },
                         style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
@@ -161,7 +159,6 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                                 setState(() {
                                   _level = e;
                                 });
-                                // context.read<TodoViewModel>().selectLevel(e);
                               },
                               child: Container(
                                 margin: const EdgeInsets.all(8),
@@ -171,43 +168,33 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                               ),
                             ))
                         .toList()),
+                // if (widget.targetSchedule != null)
+                //   _buildDeleteButton(
+                //       colorScheme, widget.targetSchedule?.id ?? 0),
               ])),
             )
           ],
         ));
   }
 
-  void _showDatePicker(BuildContext context, bool isStart,
+  void _showDateModal(BuildContext context, bool isBegin,
       {required DateTime initialDate}) {
-    showCupertinoModalPopup(
+    showModalBottomSheet(
         context: context,
-        builder: (_) => Container(
-              height: 500,
-              color: const Color.fromARGB(255, 255, 255, 255),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 400,
-                    child: CupertinoDatePicker(
-                        minimumDate: DateItemStore().dateItemProperties.minDate,
-                        initialDateTime: initialDate,
-                        maximumDate: DateItemStore().dateItemProperties.maxDate,
-                        onDateTimeChanged: (date) {
-                          if (isStart) {
-                            _begin = date;
-                          } else {
-                            _end = date;
-                          }
-                        }),
-                  ),
-
-                  // Close the modal
-                  CupertinoButton(
-                    child: const Text('OK'),
-                    onPressed: () => Navigator.of(context).pop(),
-                  )
-                ],
-              ),
-            ));
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        builder: (_) => DateModal(
+            isBegin: isBegin,
+            initialDate: initialDate,
+            callBack: (date) {
+              if (isBegin) {
+                _begin = date;
+              } else {
+                _end = date;
+              }
+              setState(() {});
+            }));
   }
 }

@@ -6,7 +6,14 @@ class UpdateSchduleUseCase {
   UpdateSchduleUseCase({
     required this.scheduleRepository,
   });
-  Future<void> call(Schedule schedule) async {
+  Future<List<Schedule>> call(
+      Schedule schedule, List<Schedule> selectedSchedules) async {
     await scheduleRepository.updateSchedule(schedule);
+    return selectedSchedules.map((e) {
+      if (e.id == schedule.id) {
+        return schedule;
+      }
+      return e;
+    }).toList();
   }
 }

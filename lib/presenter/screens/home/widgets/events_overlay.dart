@@ -27,8 +27,9 @@ class EventsOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return CalendarSelectors((events) {
-      final weeks = List.generate(CalendarConstants.kMaxWeekPerMoth, (week) {
+    return CalendarSchedulesSelector((events) {
+      final weeks =
+          List.generate(CalendarElemetOptions.kMaxWeekPerMoth, (week) {
         final drawers = <EventProperties>[];
         final beginDate = Jiffy(begin).add(weeks: week);
         final endDate = Jiffy(beginDate).add(days: 7 - 1);
@@ -74,7 +75,7 @@ class EventsOverlay extends StatelessWidget {
     for (var i = 0; i < eventLines.length; i++) {
       for (var j = 0; j < eventLines[i].events.length; j++) {
         var item = eventLines[i].events[j];
-        if (i < CalendarConstants.kMaxLines - 1) {
+        if (i < CalendarElemetOptions.kMaxLines - 1) {
           widgets.add(
             Positioned(
               top: i * lineHeight,
@@ -83,7 +84,8 @@ class EventsOverlay extends StatelessWidget {
                   (padding?.right ?? 0),
               child: SizedBox(
                 height: lineHeight -
-                    itemHeight / CalendarConstants.kDistanceBetweenEventsCoef,
+                    itemHeight /
+                        CalendarElemetOptions.kDistanceBetweenEventsCoef,
                 width: itemWidth * item.size() - kLinesPadding,
                 child: Container(
                   color: item.backgroundColor,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:today_mate_clean/domain/entities/calendar/day_props.dart';
 import 'package:today_mate_clean/domain/entities/schedule/schedule.dart';
-import 'package:today_mate_clean/presenter/screens/schedule_form/schedule_form.dart.dart';
+import 'package:today_mate_clean/presenter/screens/home/sections/app_themes.dart';
 import 'package:today_mate_clean/presenter/screens/splash/splash.dart';
 import '../core/extensions/fade_page_route.dart';
 import '../presenter/screens/home/home.dart';
-import '../presenter/widgets/app_themes_list.dart';
+import '../presenter/screens/home/sections/compose.dart';
 
 enum Routes { splash, home, form, themes }
 
@@ -39,7 +39,7 @@ class AppNavigator {
         return FadeRoute(page: const SplashScreen());
 
       case _Paths.themes:
-        return FadeRoute(page: const AppThemesList());
+        return FadeRoute(page: const AppThemesScreen());
 
       // case _Paths.pokemonInfo:
       //   return FadeRoute(page: PokemonInfo());
@@ -52,7 +52,7 @@ class AppNavigator {
 
       case _Paths.form:
         return FadeRoute(
-            page: ScheduleFormScreen(
+            page: ComposeScreen(
                 targetSchedule: (settings.arguments != null)
                     ? (settings.arguments as Schedule)
                     : null));

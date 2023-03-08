@@ -10,20 +10,14 @@ import 'package:today_mate_clean/domain/usecases/app_theme/get_theme_id_usecase.
 import 'package:today_mate_clean/domain/usecases/app_theme/remove_theme_usecase.dart';
 import 'package:today_mate_clean/domain/usecases/app_theme/set_theme_id_usecase.dart';
 import 'package:today_mate_clean/domain/usecases/app_theme_usecases.dart';
-import 'package:today_mate_clean/domain/usecases/calendar/get_calendar_item_usecase.dart';
-import 'package:today_mate_clean/domain/usecases/calendar/select_app_bar_date_usecase.dart';
-import 'package:today_mate_clean/domain/usecases/calendar/select_date_usecase.dart';
-import 'package:today_mate_clean/domain/usecases/calender_usecases.dart';
 import 'package:today_mate_clean/domain/usecases/schedule/create_schedule_usecase.dart';
 import 'package:today_mate_clean/domain/usecases/schedule/delete_schedule_usecase.dart';
-
 import 'package:today_mate_clean/domain/usecases/schedule/get_schedules_usecase.dart';
 import 'package:today_mate_clean/domain/usecases/schedule/update_schedule_usecase.dart';
 import 'package:today_mate_clean/domain/usecases/schedule_usecases.dart.dart';
+import 'package:today_mate_clean/states/app_theme/app_theme_cubit.dart';
 import 'package:today_mate_clean/states/calendar/calendar_bloc.dart';
 import 'package:today_mate_clean/states/schedule/schedule_bloc.dart';
-import 'package:today_mate_clean/states/theme/theme_cubit.dart';
-
 import 'app.dart';
 import 'data/repositories/app_theme_repository_impl.dart';
 
@@ -69,15 +63,10 @@ void main() async {
           BlocProvider<CalendarBloc>(
             create: (context) => CalendarBloc(
               scheduleBloc: context.read<ScheduleBloc>(),
-              calendarUseCases: const CalendarUseCases(
-                selectAppBarDateUseCase: SelectAppBarDateUseCase(),
-                selectDateUseCase: SelectDateUseCase(),
-                getCalendarItemsUseCase: GetCalendarItemsUseCase(),
-              ),
             ),
           ),
-          BlocProvider<ThemeCubit>(
-            create: (context) => ThemeCubit(
+          BlocProvider<AppThemeCubit>(
+            create: (context) => AppThemeCubit(
               appThemesUsecases: AppThemesUsecases(
                 getAppThemeIdUsecase: GetAppThemeIdUsecase(
                   appThemeRepository: context.read<AppThemeRepository>(),

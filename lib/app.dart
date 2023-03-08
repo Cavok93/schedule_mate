@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:today_mate_clean/configs/routes.dart';
-import 'package:today_mate_clean/states/theme/theme_cubit.dart';
+import 'package:today_mate_clean/states/app_theme/app_theme_cubit.dart';
+import 'package:today_mate_clean/states/app_theme/app_theme_selector.dart';
 
 class ScheduleApp extends StatefulWidget {
   const ScheduleApp({super.key});
@@ -13,7 +14,7 @@ class ScheduleApp extends StatefulWidget {
 }
 
 class _ScheduleAppState extends State<ScheduleApp> {
-  ThemeCubit get themeCubit => context.read<ThemeCubit>();
+  AppThemeCubit get themeCubit => context.read<AppThemeCubit>();
 
   @override
   void initState() {
@@ -21,21 +22,42 @@ class _ScheduleAppState extends State<ScheduleApp> {
     themeCubit.setTheme();
   }
 
+  Widget _buildLoading() {
+    return const SizedBox();
+  }
+
+  Widget _buildApp() {
+    return SelectAppThemeSelector((selectedTheme) => MaterialApp(
+          color: Colors.white,
+          title: 'ScheduleApp App',
+          theme: selectedTheme.themeData,
+          themeMode: ThemeMode.system,
+          navigatorKey: AppNavigator.navigatorKey,
+          onGenerateRoute: AppNavigator.onGenerateRoute,
+          builder: (context, child) {
+            if (child == null) return const SizedBox();
+            return child;
+          },
+        ));
+  }
+
+  Widget _buildError() {
+    return const SizedBox();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final themeState = context.watch<ThemeCubit>().state;
-
-    return MaterialApp(
-      color: Colors.white,
-      title: 'ScheduleApp App',
-      theme: themeState.selectedThems.themeData,
-      themeMode: ThemeMode.system,
-      navigatorKey: AppNavigator.navigatorKey,
-      onGenerateRoute: AppNavigator.onGenerateRoute,
-      builder: (context, child) {
-        if (child == null) return const SizedBox();
-        return child;
-      },
-    );
+    return AppThemeStateStatusSelector((status) {
+      switch (status) {
+        case AppThemeStateStatus.loading:
+          return _buildLoading();
+        case AppThemeStateStatus.loadSuccess:
+          return _buildApp();
+        case AppThemeStateStatus.loadFailure:
+          return _buildError();
+        default:
+          return const SizedBox();
+      }
+    });
   }
 }
