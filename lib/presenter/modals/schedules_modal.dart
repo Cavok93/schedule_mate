@@ -22,33 +22,32 @@ class SchedulesBottomModal extends StatelessWidget {
   }
 
   Widget _buildSchedules(BuildContext context) {
-    return Expanded(child: SelectedSchedulesSelector((schedules) {
+    return Expanded(
+        child: NumberOfSelectedSchedulesSelector((numberOfSelectedSchedules) {
       return ListView.separated(
         separatorBuilder: (context, index) {
           return const SizedBox(
             height: 16,
           );
         },
-        itemCount: schedules.length,
+        itemCount: numberOfSelectedSchedules,
         itemBuilder: (context, index) {
-          return SelectedScheduleSelector(schedules[index], (_) {
-            // for (var item in schedules) {
-            //   log("upper builder: ${}");
-            // }sc
-            // log("${schedule.description}");
-            return ScheduleCard(
-              schedule: schedules[index],
-              callBack: (id) async {
-                final scheduleBloc = context.read<ScheduleBloc>();
-                scheduleBloc.add(DeleteScheduleEvent(id: id));
-                NavigatorState? navigator = Navigator.of(context);
-                final nextState = await scheduleBloc.stream
-                    .firstWhere((element) => element.selectedSchedules.isEmpty);
-                if (nextState.selectedSchedules.isEmpty) {
-                  navigator.pop();
-                }
-              },
-            );
+          return SelectedSchedulesSelector((schedules) {
+            return SelectedScheduleSelector(schedules[index], (schdule) {
+              return ScheduleCard(
+                schedule: schdule,
+                callBack: (id) async {
+                  final scheduleBloc = context.read<ScheduleBloc>();
+                  scheduleBloc.add(DeleteScheduleEvent(id: id));
+                  NavigatorState? navigator = Navigator.of(context);
+                  final nextState = await scheduleBloc.stream.firstWhere(
+                      (element) => element.selectedSchedules.isEmpty);
+                  if (nextState.selectedSchedules.isEmpty) {
+                    navigator.pop();
+                  }
+                },
+              );
+            });
           });
         },
       );

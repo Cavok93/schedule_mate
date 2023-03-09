@@ -15,25 +15,26 @@ class AppThemeBody extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: EdgeInsets.fromLTRB(
-                16,
-                16,
-                16,
-                Platform.isAndroid
-                    ? 16
-                    : MediaQuery.of(context).padding.bottom),
-            sliver: AppThemesSelector((appThemes) {
-              return SliverList(
-                delegate: SliverChildBuilderDelegate((context, sliverIndex) {
-                  return AppThemeSelector(appThemes[sliverIndex],
-                      (appTheme, isSelected) {
-                    return AppThemeCard(
-                        appTheme: appTheme, isSelected: isSelected);
-                  });
-                }, childCount: appThemes.length),
-              );
-            }),
-          )
+              padding: EdgeInsets.fromLTRB(
+                  16,
+                  16,
+                  16,
+                  Platform.isAndroid
+                      ? 16
+                      : MediaQuery.of(context).padding.bottom),
+              sliver: NumberOfAppThemesSelector((numberOfAppThemes) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate((context, sliverIndex) {
+                    return AppThemesSelector((appThemes) {
+                      return AppThemeSelector(appThemes[sliverIndex],
+                          (appTheme, isSelected) {
+                        return AppThemeCard(
+                            appTheme: appTheme, isSelected: isSelected);
+                      });
+                    });
+                  }, childCount: numberOfAppThemes),
+                );
+              }))
         ],
       ),
     );
