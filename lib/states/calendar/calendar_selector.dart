@@ -49,22 +49,3 @@ class CalendarSelectedAppBarDateSelector
           builder: builder,
         );
 }
-
-class CalendarSelector extends CalendarStateSelector<CalendarSelectorState> {
-  CalendarSelector(int index, Widget Function(Schedule) builder, {super.key})
-      : super(
-          selector: (state) => CalendarSelectorState(
-            state.schedules[index],
-          ),
-          builder: (value) => builder(value.schedule),
-        );
-}
-
-class CalendarSelectorState extends Equatable {
-  final Schedule schedule;
-  const CalendarSelectorState(
-    this.schedule,
-  );
-  @override
-  List<Object> get props => [schedule.id ?? 0];
-}

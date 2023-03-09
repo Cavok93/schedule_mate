@@ -21,14 +21,6 @@ class AppThemeStateSelector<T>
         );
 }
 
-class NumberOfAppThemesSelector extends AppThemeStateSelector<int> {
-  NumberOfAppThemesSelector(Widget Function(int) builder, {super.key})
-      : super(
-          selector: (state) => state.appThemes.length,
-          builder: builder,
-        );
-}
-
 class AppThemeStateStatusSelector
     extends AppThemeStateSelector<AppThemeStateStatus> {
   AppThemeStateStatusSelector(Widget Function(AppThemeStateStatus) builder,
@@ -43,6 +35,14 @@ class SelectAppThemeSelector extends AppThemeStateSelector<AppTheme> {
   SelectAppThemeSelector(Widget Function(AppTheme) builder, {super.key})
       : super(
           selector: (state) => state.selectedTheme,
+          builder: builder,
+        );
+}
+
+class NumberOfAppThemesSelector extends AppThemeStateSelector<int> {
+  NumberOfAppThemesSelector(Widget Function(int) builder, {super.key})
+      : super(
+          selector: (state) => state.appThemes.length,
           builder: builder,
         );
 }

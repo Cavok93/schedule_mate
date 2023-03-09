@@ -32,6 +32,14 @@ class ScheduleStateStatusSelector
         );
 }
 
+class NumberOfSelectedSchedulesSelector extends ScheduleStateSelector<int> {
+  NumberOfSelectedSchedulesSelector(Widget Function(int) builder, {super.key})
+      : super(
+          selector: (state) => state.selectedSchedules.length,
+          builder: builder,
+        );
+}
+
 class SelectedSchedulesSelector extends ScheduleStateSelector<List<Schedule>> {
   SelectedSchedulesSelector(Widget Function(List<Schedule>) builder,
       {super.key})
