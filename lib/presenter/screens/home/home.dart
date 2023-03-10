@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:today_mate_clean/core/enums/week_day.dart';
 import 'package:today_mate_clean/domain/entities/calendar/day_props.dart';
-import 'package:today_mate_clean/domain/entities/schedule/schedule.dart';
+
 import 'package:today_mate_clean/presenter/screens/home/sections/calendar.dart';
 import 'package:today_mate_clean/states/schedule/schedule_bloc.dart';
 import '../../../configs/routes.dart';
@@ -65,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: colorScheme.onPrimary,
           automaticallyImplyLeading: true,
@@ -120,7 +121,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(
                   Icons.color_lens_sharp,
                   color: colorScheme.primary,
-                  // color: Colors.red,
                 )),
             IconButton(
                 onPressed: () {
