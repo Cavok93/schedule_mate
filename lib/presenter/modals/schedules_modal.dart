@@ -39,12 +39,12 @@ class SchedulesBottomModal extends StatelessWidget {
                 callBack: (id) async {
                   final scheduleBloc = context.read<ScheduleBloc>();
                   scheduleBloc.add(DeleteScheduleEvent(id: id));
-                  NavigatorState? navigator = Navigator.of(context);
-                  final nextState = await scheduleBloc.stream.firstWhere(
-                      (element) => element.selectedSchedules.isEmpty);
-                  if (nextState.selectedSchedules.isEmpty) {
-                    navigator.pop();
-                  }
+                  // NavigatorState? navigator = Navigator.of(context);
+                  // final nextState = await scheduleBloc.stream.firstWhere(
+                  //     (element) => element.selectedSchedules.isEmpty);
+                  // if (nextState.selectedSchedules.isEmpty) {
+                  //   navigator.pop();
+                  // }
                 },
               );
             });
