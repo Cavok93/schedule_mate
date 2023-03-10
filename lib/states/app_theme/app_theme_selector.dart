@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,14 +41,6 @@ class SelectAppThemeSelector extends AppThemeStateSelector<AppTheme> {
         );
 }
 
-class NumberOfAppThemesSelector extends AppThemeStateSelector<int> {
-  NumberOfAppThemesSelector(Widget Function(int) builder, {super.key})
-      : super(
-          selector: (state) => state.appThemes.length,
-          builder: builder,
-        );
-}
-
 class AppThemesSelector extends AppThemeStateSelector<List<AppTheme>> {
   AppThemesSelector(Widget Function(List<AppTheme>) builder, {super.key})
       : super(
@@ -56,23 +50,20 @@ class AppThemesSelector extends AppThemeStateSelector<List<AppTheme>> {
 }
 
 class AppThemeSelector extends AppThemeStateSelector<AppThemeSelectorState> {
-  AppThemeSelector(AppTheme appTheme, Widget Function(AppTheme, bool) builder,
-      {super.key})
+  AppThemeSelector(int id, Widget Function(bool) builder, {super.key})
       : super(
           selector: (state) => AppThemeSelectorState(
-            appTheme,
-            state.selectedTheme.id == appTheme.id,
+            state.selectedTheme.id == id,
           ),
-          builder: (value) => builder(value.appTheme, value.selected),
+          builder: (value) => builder(value.selected),
         );
 }
 
 class AppThemeSelectorState extends Equatable {
-  final AppTheme appTheme;
   final bool selected;
 
-  const AppThemeSelectorState(this.appTheme, this.selected);
+  const AppThemeSelectorState(this.selected);
 
   @override
-  List<Object> get props => [appTheme, selected];
+  List<Object> get props => [selected];
 }

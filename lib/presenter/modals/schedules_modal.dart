@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:today_mate_clean/states/schedule/schedule_selector.dart';
@@ -22,33 +20,22 @@ class SchedulesBottomModal extends StatelessWidget {
   }
 
   Widget _buildSchedules(BuildContext context) {
-    return Expanded(
-        child: NumberOfSelectedSchedulesSelector((numberOfSelectedSchedules) {
+    return Expanded(child: SelectedSchedulesSelector((selectedSchdules) {
       return ListView.separated(
         separatorBuilder: (context, index) {
           return const SizedBox(
             height: 16,
           );
         },
-        itemCount: numberOfSelectedSchedules,
+        itemCount: selectedSchdules.length,
         itemBuilder: (context, index) {
-          return SelectedSchedulesSelector((schedules) {
-            return SelectedScheduleSelector(schedules[index], (schdule) {
-              return ScheduleCard(
-                schedule: schdule,
-                callBack: (id) async {
-                  final scheduleBloc = context.read<ScheduleBloc>();
-                  scheduleBloc.add(DeleteScheduleEvent(id: id));
-                  // NavigatorState? navigator = Navigator.of(context);
-                  // final nextState = await scheduleBloc.stream.firstWhere(
-                  //     (element) => element.selectedSchedules.isEmpty);
-                  // if (nextState.selectedSchedules.isEmpty) {
-                  //   navigator.pop();
-                  // }
-                },
-              );
-            });
-          });
+          final schedules = selectedSchdules[index];
+          return ScheduleCard(
+              schedule: schedules,
+              callBack: (id) {
+                final scheduleBloc = context.read<ScheduleBloc>();
+                scheduleBloc.add(DeleteScheduleEvent(id: id));
+              });
         },
       );
     }));

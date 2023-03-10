@@ -22,17 +22,15 @@ class AppThemeBody extends StatelessWidget {
                   Platform.isAndroid
                       ? 16
                       : MediaQuery.of(context).padding.bottom),
-              sliver: NumberOfAppThemesSelector((numberOfAppThemes) {
+              sliver: AppThemesSelector((appThemes) {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate((context, sliverIndex) {
-                    return AppThemesSelector((appThemes) {
-                      return AppThemeSelector(appThemes[sliverIndex],
-                          (appTheme, isSelected) {
-                        return AppThemeCard(
-                            appTheme: appTheme, isSelected: isSelected);
-                      });
+                    final appTheme = appThemes[sliverIndex];
+                    return AppThemeSelector(appTheme.id, (isSelected) {
+                      return AppThemeCard(
+                          appTheme: appTheme, isSelected: isSelected);
                     });
-                  }, childCount: numberOfAppThemes),
+                  }, childCount: appThemes.length),
                 );
               }))
         ],
