@@ -7,6 +7,7 @@ import '../../../../core/enums/week_day.dart';
 import '../../../../states/calendar/calendar_bloc.dart';
 import '../../../../states/schedule/schedule_bloc.dart';
 import '../../../../states/schedule/schedule_selector.dart';
+import '../../../widgets/schedule_card.dart';
 import '../widgets/week_row.dart';
 import '../widgets/calender_body.dart';
 
@@ -63,8 +64,8 @@ class _CalendarState extends State<Calendar> {
               pageSnapping: true,
               controller: widget.pageController,
               itemCount: widget.pageCount,
-              scrollDirection: Axis.vertical,
-              // scrollDirection: Axis.horizontal,
+              // scrollDirection: Axis.vertical,
+              scrollDirection: Axis.horizontal,
               itemBuilder: (context, pageIndex) {
                 final int offset = pageIndex - widget.initialPage;
                 final displayMonth =
@@ -110,6 +111,49 @@ class _CalendarState extends State<Calendar> {
                     daysInMonth: daysInMonth);
               }),
         ),
+        SelectedSchedulesSelector((selectedSchdules) {
+          return AnimatedContainer(
+              decoration: BoxDecoration(
+                  border: Border(
+                      top:
+                          BorderSide(color: Colors.grey.shade300, width: 1.0))),
+              curve: Curves.fastOutSlowIn,
+              height: selectedSchdules.isEmpty
+                  ? 1.0
+                  : MediaQuery.of(context).size.height * 0.4,
+              duration: const Duration(milliseconds: 500),
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 6, bottom: 16),
+                    height: 3,
+                    width: 24,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey.shade300),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                          height: 16,
+                        );
+                      },
+                      itemCount: selectedSchdules.length,
+                      itemBuilder: (context, index) {
+                        final schedules = selectedSchdules[index];
+                        return ScheduleCard(
+                            schedule: schedules,
+                            callBack: (id) {
+                              final scheduleBloc = context.read<ScheduleBloc>();
+                              scheduleBloc.add(DeleteScheduleEvent(id: id));
+                            });
+                      },
+                    ),
+                  ),
+                ],
+              ));
+        })
       ],
     );
   }

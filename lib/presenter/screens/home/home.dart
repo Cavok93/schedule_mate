@@ -150,33 +150,6 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ],
         ),
-        // body: Container(
-        //   padding: EdgeInsets.only(top: 2),
-        //   height: 100,
-        //   width: 100,
-        //   color: Colors.amber,
-        //   child: Stack(
-        //     children: [
-        //       Positioned(
-        //         left: 0,
-        //         top: 0,
-        //         child: Container(
-        //           height: 100,
-        //           width: 20,
-        //           child: FittedBox(
-        //             fit: BoxFit.fitHeight,
-        //             alignment: Alignment.center,
-        //             child: Text(
-        //               "야야야야야야야야야야야야야야야야야야야야야야야야",
-        //               overflow: TextOverflow.ellipsis,
-        //               style: TextStyle(color: Colors.black),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         body: Calendar(
             pageController: _pageController,
             initialPage: _initialPage,

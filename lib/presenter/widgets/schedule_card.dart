@@ -20,45 +20,48 @@ class ScheduleCard extends StatelessWidget {
       child: Card(
         elevation: 0.0,
         child: Container(
-          height: 100,
+          // height: 100,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 2,
-                offset: const Offset(0, 0),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300, width: 1.0)
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: Colors.grey.withOpacity(0.5),
+              //     spreadRadius: 2,
+              //     blurRadius: 2,
+              //     offset: const Offset(0, 0),
+              //   ),
+              // ],
               ),
-            ],
-          ),
           child: Stack(
             children: [
               Row(
                 children: [
-                  Container(
-                    color: CalendarUtils.extractLevelColor(
-                        schedule.level, colorScheme),
-                    width: 4,
-                  ),
+                  // Container(
+                  //   height: 3,
+                  //   color: CalendarUtils.extractLevelColor(
+                  //       schedule.level, colorScheme),
+                  //   width: 4,
+                  // ),
+                  Checkbox(value: true, onChanged: (value) {}),
                   Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(schedule.description),
                         Text(
-                            "${SimpleTime(schedule.begin).format()} - ${SimpleTime(schedule.end).format()}"),
+                            "${DateTimeX(schedule.begin).format()} - ${DateTimeX(schedule.end).format()}"),
                       ],
                     ),
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child:
-                    _buildDeleteButton(context, colorScheme, schedule.id ?? 0),
-              )
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child:
+              //       _buildDeleteButton(context, colorScheme, schedule.id ?? 0),
+              // )
             ],
           ),
         ),

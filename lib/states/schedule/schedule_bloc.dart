@@ -26,9 +26,11 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   Future<void> _createSchedule(
       CreateScheduleEvent event, Emitter<ScheduleState> emit) async {
     try {
-      await scheduleUseCases.createScheduleUseCase(event.schedule);
+      final selectedSchedules = await scheduleUseCases.createScheduleUseCase(
+          event.schedule, state.selectedSchedules);
       final schedules = await scheduleUseCases.getSchedulesUseCase();
-      emit(state.copyWith(schedules: schedules));
+      emit(state.copyWith(
+          schedules: schedules, selectedSchedules: selectedSchedules));
     } on CacheFailure catch (e) {
       emit(state.copyWith(status: ScheduleStateStatus.loadFailure, failure: e));
     }

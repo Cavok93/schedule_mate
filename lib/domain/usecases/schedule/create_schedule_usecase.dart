@@ -7,9 +7,14 @@ class CreateScheduleUseCase {
   const CreateScheduleUseCase({
     required this.scheduleRepository,
   });
-  Future<Schedule> call(Schedule schedule) async {
+  Future<List<Schedule>> call(
+      Schedule schedule, List<Schedule> selectedSchedules) async {
     try {
-      return await scheduleRepository.createSchedule(schedule);
+      final createdSchedule = await scheduleRepository.createSchedule(schedule);
+      if (selectedSchedules.isNotEmpty) {
+        return [...selectedSchedules, createdSchedule];
+      }
+      return [];
     } catch (e) {
       rethrow;
     }
