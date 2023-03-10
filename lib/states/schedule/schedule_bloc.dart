@@ -16,6 +16,12 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<UpdateScheduleEvent>(_updateSchedule);
     on<DeleteScheduleEvent>(_deleteSchedule);
     on<SelectSchedulesEvent>(_selectSchedules);
+    on<ResetSelectedSchedulesEvent>(_resetSelectedSchedules);
+  }
+
+  void _resetSelectedSchedules(
+      ResetSelectedSchedulesEvent event, Emitter<ScheduleState> emit) {
+    emit(state.copyWith(selectedSchedules: []));
   }
 
   void _selectSchedules(

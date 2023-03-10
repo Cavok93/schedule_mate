@@ -133,10 +133,6 @@ class CalendarCell extends StatelessWidget {
           context
               .read<ScheduleBloc>()
               .add(SelectSchedulesEvent(schedules: targetEvents));
-          // _showSchdulesModal(
-          //     context: context,
-          //     day: currentDate.dateTime,
-          //     events: targetEvents);
         },
         child: Container(
           width: itemWidth,

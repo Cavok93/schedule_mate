@@ -21,6 +21,8 @@ class SelectSchedulesEvent extends ScheduleEvent {
   });
 }
 
+class ResetSelectedSchedulesEvent extends ScheduleEvent {}
+
 class GetSchedulesEvent extends ScheduleEvent {}
 
 class UpdateScheduleEvent extends ScheduleEvent {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
@@ -50,6 +52,7 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget _buildCalendar() {
+    final targetSize = MediaQuery.of(context).size.height * 0.4;
     return Column(
       children: [
         const WeekRow(),
@@ -111,53 +114,94 @@ class _CalendarState extends State<Calendar> {
                     daysInMonth: daysInMonth);
               }),
         ),
-        SelectedSchedulesSelector((selectedSchdules) {
-          return AnimatedContainer(
-              decoration: BoxDecoration(
-                  border: Border(
-                      top:
-                          BorderSide(color: Colors.grey.shade300, width: 1.0))),
-              curve: Curves.fastOutSlowIn,
-              height: selectedSchdules.isEmpty
-                  ? 1.0
-                  : MediaQuery.of(context).size.height * 0.4,
-              duration: const Duration(milliseconds: 500),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 6, bottom: 16),
-                    height: 3,
-                    width: 24,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.grey.shade300),
-                  ),
-                  Expanded(
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(
-                          height: 16,
-                        );
-                      },
-                      itemCount: selectedSchdules.length,
-                      itemBuilder: (context, index) {
-                        final schedules = selectedSchdules[index];
-                        return ScheduleCard(
-                            schedule: schedules,
-                            callBack: (id) {
-                              final scheduleBloc = context.read<ScheduleBloc>();
-                              scheduleBloc.add(DeleteScheduleEvent(id: id));
-                            });
-                      },
-                    ),
-                  ),
-                ],
-              ));
-        })
+        BlocListener<ScheduleBloc, ScheduleState>(
+          listener: (context, sheduleState) {
+            // log("리스너");
+            if (sheduleState.selectedSchedules.isNotEmpty) {
+              setState(() {
+                _height = MediaQuery.of(context).size.height * 0.4;
+              });
+            }
+          },
+          child: SelectedSchedulesSelector((selectedSchdules) {
+            // log("내부");
+            return GestureDetector(
+              onVerticalDragUpdate: (DragUpdateDetails details) {
+                setState(() {
+                  _isSpeed = true;
+                  _height -= details.delta.dy;
+                  _height = _height.clamp(0, targetSize);
+                });
+              },
+              onVerticalDragEnd: (details) {
+                setState(() {
+                  _isSpeed = false;
+                  if (_height > (targetSize - 40)) {
+                    _height = targetSize;
+                  } else {
+                    _height = 0.0;
+                  }
+                });
+              },
+              child: AnimatedContainer(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(
+                              color: Colors.grey.shade300, width: 1.0))),
+                  curve: Curves.fastOutSlowIn,
+                  height: selectedSchdules.isEmpty ? 0.0 : _height,
+                  duration: Duration(milliseconds: _isSpeed ? 0 : 350),
+                  onEnd: () {
+                    if (_height < 1) {
+                      context
+                          .read<ScheduleBloc>()
+                          .add(ResetSelectedSchedulesEvent());
+                    }
+                  },
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                              padding: const EdgeInsets.only(top: 26),
+                              separatorBuilder: (context, index) {
+                                return const SizedBox();
+                              },
+                              itemCount: selectedSchdules.length,
+                              itemBuilder: (context, index) {
+                                final schedules = selectedSchdules[index];
+                                return ScheduleCard(
+                                    schedule: schedules,
+                                    callBack: (id) {
+                                      final scheduleBloc =
+                                          context.read<ScheduleBloc>();
+                                      scheduleBloc
+                                          .add(DeleteScheduleEvent(id: id));
+                                    });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          height: 26,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  )),
+            );
+          }),
+        )
       ],
     );
   }
 
+  bool _isSpeed = false;
+  double _height = 400.0;
   Widget _buildLoading() {
     return const Center(
       child: CircularProgressIndicator(),
