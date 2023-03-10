@@ -7,6 +7,10 @@ class RemoveAppThemeIdUsecase {
   });
 
   Future<void> call() async {
-    await appThemeRepository.removeAppThemeId();
+    try {
+      await appThemeRepository.removeAppThemeId();
+    } catch (e) {
+      rethrow;
+    }
   }
 }

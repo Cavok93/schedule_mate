@@ -7,6 +7,10 @@ class SetAppThemeIdUsecase {
   });
 
   Future<void> call(int id) async {
-    await appThemeRepository.setAppThemeId(id);
+    try {
+      await appThemeRepository.setAppThemeId(id);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

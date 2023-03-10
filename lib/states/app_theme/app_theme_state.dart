@@ -11,13 +11,13 @@ class AppThemeState extends Equatable {
   final List<AppTheme> appThemes;
   final AppTheme selectedTheme;
   final AppThemeStateStatus status;
-  final Exception? error;
+  final Failure? failure;
 
   const AppThemeState({
     required this.appThemes,
     required this.selectedTheme,
     required this.status,
-    this.error,
+    this.failure,
   });
 
   factory AppThemeState.initial() {
@@ -153,15 +153,15 @@ class AppThemeState extends Equatable {
 
   AppThemeState copyWith({
     List<AppTheme>? appThemes,
-    AppTheme? selectedThems,
+    AppTheme? selectedTheme,
     AppThemeStateStatus? status,
-    Exception? error,
+    Failure? failure,
   }) {
     return AppThemeState(
       appThemes: appThemes ?? this.appThemes,
-      selectedTheme: selectedThems ?? this.selectedTheme,
+      selectedTheme: selectedTheme ?? this.selectedTheme,
       status: status ?? this.status,
-      error: error ?? this.error,
+      failure: failure ?? this.failure,
     );
   }
 }

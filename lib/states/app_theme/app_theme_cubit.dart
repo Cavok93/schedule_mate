@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:today_mate_clean/core/errors/failures.dart';
 import 'package:today_mate_clean/domain/usecases/app_theme_usecases.dart';
 
 import '../../domain/entities/app_theme/app_theme.dart';
@@ -24,19 +25,18 @@ class AppThemeCubit extends Cubit<AppThemeState> {
           state.appThemes.firstWhereOrNull((theme) => theme.id == id);
       emit(state.copyWith(
           status: AppThemeStateStatus.loadSuccess,
-          selectedThems: selectedTheme));
-    } on Exception catch (e) {
-      log("$e");
-      emit(state.copyWith(status: AppThemeStateStatus.loadFailure, error: e));
+          selectedTheme: selectedTheme));
+    } on CacheFailure catch (e) {
+      emit(state.copyWith(status: AppThemeStateStatus.loadFailure, failure: e));
     }
   }
 
   Future<void> selectTheme(AppTheme appTheme) async {
     try {
       await appThemesUsecases.setAppThemeIdUsecase(appTheme.id);
-      emit(state.copyWith(selectedThems: appTheme));
-    } on Exception catch (e) {
-      emit(state.copyWith(status: AppThemeStateStatus.loadFailure, error: e));
+      emit(state.copyWith(selectedTheme: appTheme));
+    } on CacheFailure catch (e) {
+      emit(state.copyWith(status: AppThemeStateStatus.loadFailure, failure: e));
     }
   }
 }

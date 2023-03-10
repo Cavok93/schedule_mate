@@ -8,7 +8,11 @@ class DeleteScheduleUseCase {
     required this.scheduleRepository,
   });
   Future<List<Schedule>> call(int id, List<Schedule> selectedSchedules) async {
-    await scheduleRepository.deleteSchedule(id);
-    return selectedSchedules.where((element) => element.id != id).toList();
+    try {
+      await scheduleRepository.deleteSchedule(id);
+      return selectedSchedules.where((element) => element.id != id).toList();
+    } catch (e) {
+      rethrow;
+    }
   }
 }

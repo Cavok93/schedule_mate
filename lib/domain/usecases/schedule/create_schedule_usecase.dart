@@ -8,6 +8,10 @@ class CreateScheduleUseCase {
     required this.scheduleRepository,
   });
   Future<Schedule> call(Schedule schedule) async {
-    return await scheduleRepository.createSchedule(schedule);
+    try {
+      return await scheduleRepository.createSchedule(schedule);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:today_mate_clean/domain/entities/calendar/day_props.dart';
 import 'package:today_mate_clean/domain/entities/schedule/schedule.dart';
 import 'package:today_mate_clean/presenter/screens/home/sections/app_themes.dart';
 import 'package:today_mate_clean/presenter/screens/splash/splash.dart';
+
 import '../core/fade_page_route.dart';
 import '../presenter/screens/home/home.dart';
 import '../presenter/screens/home/sections/compose.dart';

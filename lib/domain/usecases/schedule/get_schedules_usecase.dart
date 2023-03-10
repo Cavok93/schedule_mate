@@ -7,6 +7,10 @@ class GetSchedulesUseCase {
     required this.scheduleRepository,
   });
   Future<List<Schedule>> call() async {
-    return await scheduleRepository.getSchedules();
+    try {
+      return await scheduleRepository.getSchedules();
+    } catch (e) {
+      rethrow;
+    }
   }
 }

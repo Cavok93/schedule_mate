@@ -1,5 +1,6 @@
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
+import 'package:today_mate_clean/core/errors/exceptions.dart';
 import '../../models/schedule_data.dart';
 
 class ScheduleDataBase {
@@ -27,44 +28,60 @@ class ScheduleDataBase {
   }
 
   Future<List<ScheduleData>> getSchedules() async {
-    final db = await database;
-    return db.query(_tableName);
+    try {
+      final db = await database;
+      return db.query(_tableName);
+    } catch (e) {
+      throw CacheException();
+    }
   }
 
   Future<ScheduleData> insertSchedule(final ScheduleData scheduleData) async {
-    final db = await database;
-    late final ScheduleData scheduleEntity;
-    await db.transaction((txn) async {
-      final id = await txn.insert(
-        _tableName,
-        scheduleData,
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      final results =
-          await txn.query(_tableName, where: '$_columnId = ?', whereArgs: [id]);
-      scheduleEntity = results.first;
-    });
-    return scheduleEntity;
+    try {
+      final db = await database;
+      late final ScheduleData scheduleEntity;
+      await db.transaction((txn) async {
+        final id = await txn.insert(
+          _tableName,
+          scheduleData,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        final results = await txn
+            .query(_tableName, where: '$_columnId = ?', whereArgs: [id]);
+        scheduleEntity = results.first;
+      });
+      return scheduleEntity;
+    } catch (e) {
+      throw CacheException();
+    }
   }
 
   Future<void> updateSchedule(final ScheduleData scheduleData) async {
-    final db = await database;
-    final int id = scheduleData['id'];
-    await db.update(
-      _tableName,
-      scheduleData,
-      where: '$_columnId = ?',
-      whereArgs: [id],
-    );
+    try {
+      final db = await database;
+      final int id = scheduleData['id'];
+      await db.update(
+        _tableName,
+        scheduleData,
+        where: '$_columnId = ?',
+        whereArgs: [id],
+      );
+    } catch (e) {
+      throw CacheException();
+    }
   }
 
   Future<void> deleteSchedule(final int id) async {
-    final db = await database;
-    await db.delete(
-      _tableName,
-      where: '$_columnId = ?',
-      whereArgs: [id],
-    );
+    try {
+      final db = await database;
+      await db.delete(
+        _tableName,
+        where: '$_columnId = ?',
+        whereArgs: [id],
+      );
+    } catch (e) {
+      throw CacheException();
+    }
   }
 
   Future<Database> _initDatabase() async {

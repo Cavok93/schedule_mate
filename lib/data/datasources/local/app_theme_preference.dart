@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:today_mate_clean/configs/constants.dart';
+import 'package:today_mate_clean/core/errors/exceptions.dart';
 
 class AppThemePreference {
   static SharedPreferences? _sharedPreferences;
@@ -13,17 +14,29 @@ class AppThemePreference {
   }
 
   Future<int?> getAppThemeId() async {
-    final prefs = await sharedPreferences;
-    return prefs.getInt(AppThemeKey.appThemeKey);
+    try {
+      final prefs = await sharedPreferences;
+      return prefs.getInt(AppThemeKey.appThemeKey);
+    } catch (e) {
+      throw CacheException();
+    }
   }
 
   Future<void> setAppThemeId({required int id}) async {
-    final prefs = await sharedPreferences;
-    await prefs.setInt(AppThemeKey.appThemeKey, id);
+    try {
+      final prefs = await sharedPreferences;
+      await prefs.setInt(AppThemeKey.appThemeKey, id);
+    } catch (e) {
+      throw CacheException();
+    }
   }
 
   Future<void> removeAppThemeId() async {
-    final prefs = await sharedPreferences;
-    await prefs.remove(AppThemeKey.appThemeKey);
+    try {
+      final prefs = await sharedPreferences;
+      await prefs.remove(AppThemeKey.appThemeKey);
+    } catch (e) {
+      throw CacheException();
+    }
   }
 }

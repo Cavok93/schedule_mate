@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:equatable/equatable.dart';
+import 'package:today_mate_clean/core/errors/failures.dart';
 import '../../domain/entities/schedule/schedule.dart';
 import '../../domain/usecases/schedule_usecases.dart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,9 +29,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       await scheduleUseCases.createScheduleUseCase(event.schedule);
       final schedules = await scheduleUseCases.getSchedulesUseCase();
       emit(state.copyWith(schedules: schedules));
-    } on Exception catch (e) {
-      log("$e");
-      emit(state.copyWith(status: ScheduleStateStatus.loadFailure, error: e));
+    } on CacheFailure catch (e) {
+      emit(state.copyWith(status: ScheduleStateStatus.loadFailure, failure: e));
     }
   }
 
@@ -41,9 +41,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       final schedules = await scheduleUseCases.getSchedulesUseCase();
       emit(state.copyWith(
           status: ScheduleStateStatus.loadSuccess, schedules: schedules));
-    } on Exception catch (e) {
-      log("$e");
-      emit(state.copyWith(status: ScheduleStateStatus.loadFailure, error: e));
+    } on CacheFailure catch (e) {
+      emit(state.copyWith(status: ScheduleStateStatus.loadFailure, failure: e));
     }
   }
 
@@ -55,9 +54,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       final schedules = await scheduleUseCases.getSchedulesUseCase();
       emit(state.copyWith(
           schedules: schedules, selectedSchedules: newSelectedSchdules));
-    } on Exception catch (e) {
-      log("$e");
-      emit(state.copyWith(status: ScheduleStateStatus.loadFailure, error: e));
+    } on CacheFailure catch (e) {
+      emit(state.copyWith(status: ScheduleStateStatus.loadFailure, failure: e));
     }
   }
 
@@ -69,9 +67,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       final schedules = await scheduleUseCases.getSchedulesUseCase();
       emit(state.copyWith(
           schedules: schedules, selectedSchedules: newSelectedSchdules));
-    } on Exception catch (e) {
-      log("$e");
-      emit(state.copyWith(status: ScheduleStateStatus.loadFailure, error: e));
+    } on CacheFailure catch (e) {
+      emit(state.copyWith(status: ScheduleStateStatus.loadFailure, failure: e));
     }
   }
 }

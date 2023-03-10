@@ -12,12 +12,12 @@ class ScheduleState extends Equatable {
   final ScheduleStateStatus status;
   final List<Schedule> selectedSchedules;
   final List<Schedule> schedules;
-  final Exception? error;
+  final Failure? failure;
   const ScheduleState({
     required this.status,
     required this.schedules,
     required this.selectedSchedules,
-    this.error,
+    this.failure,
   });
 
   factory ScheduleState.initial() {
@@ -34,13 +34,13 @@ class ScheduleState extends Equatable {
     ScheduleStateStatus? status,
     List<Schedule>? selectedSchedules,
     List<Schedule>? schedules,
-    Exception? error,
+    Failure? failure,
   }) {
     return ScheduleState(
       status: status ?? this.status,
       selectedSchedules: selectedSchedules ?? this.selectedSchedules,
       schedules: schedules ?? this.schedules,
-      error: error ?? this.error,
+      failure: failure ?? this.failure,
     );
   }
 }

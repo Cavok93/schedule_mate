@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:today_mate_clean/core/errors/exceptions.dart';
+import 'package:today_mate_clean/core/errors/failures.dart';
 import 'package:today_mate_clean/data/datasources/local/schedule_database.dart';
 import 'package:today_mate_clean/data/mappers/schedule_mapper.dart';
 import 'package:today_mate_clean/domain/entities/schedule/schedule.dart';
@@ -12,24 +14,40 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
 
   @override
   Future<List<Schedule>> getSchedules() async {
-    final todoModelList = await scheduleDataBase.getSchedules();
-    return ScheduleMapper.toEntities(todoModelList);
+    try {
+      final todoModelList = await scheduleDataBase.getSchedules();
+      return ScheduleMapper.toEntities(todoModelList);
+    } on CacheException catch (e) {
+      throw CacheFailure(message: e.toString());
+    }
   }
 
   @override
   Future<Schedule> createSchedule(Schedule schedule) async {
-    final todoModel =
-        await scheduleDataBase.insertSchedule(ScheduleMapper.toMap(schedule));
-    return ScheduleMapper.toEntity(todoModel);
+    try {
+      final todoModel =
+          await scheduleDataBase.insertSchedule(ScheduleMapper.toMap(schedule));
+      return ScheduleMapper.toEntity(todoModel);
+    } on CacheException catch (e) {
+      throw CacheFailure(message: e.toString());
+    }
   }
 
   @override
   Future<void> deleteSchedule(int id) async {
-    await scheduleDataBase.deleteSchedule(id);
+    try {
+      await scheduleDataBase.deleteSchedule(id);
+    } on CacheException catch (e) {
+      throw CacheFailure(message: e.toString());
+    }
   }
 
   @override
   Future<void> updateSchedule(Schedule schedule) async {
-    await scheduleDataBase.updateSchedule(ScheduleMapper.toMap(schedule));
+    try {
+      await scheduleDataBase.updateSchedule(ScheduleMapper.toMap(schedule));
+    } on CacheException catch (e) {
+      throw CacheFailure(message: e.toString());
+    }
   }
 }
