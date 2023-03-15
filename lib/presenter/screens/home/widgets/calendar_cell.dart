@@ -19,7 +19,7 @@ import '../../../../states/calendar/calendar_selector.dart';
 
 class CalendarCell extends StatelessWidget {
   final Jiffy begin;
-  final Jiffy end;
+
   final double itemHeight;
   final double itemWidth;
   final double topPadding;
@@ -30,7 +30,6 @@ class CalendarCell extends StatelessWidget {
   const CalendarCell(
       {super.key,
       required this.begin,
-      required this.end,
       required this.itemHeight,
       required this.itemWidth,
       required this.topPadding,
@@ -77,6 +76,7 @@ class CalendarCell extends StatelessWidget {
               colorScheme: colorScheme),
         ),
       );
+
       return Column(
         children: weeks,
       );
@@ -96,6 +96,7 @@ class CalendarCell extends StatelessWidget {
       required ColorScheme colorScheme}) {
     final days = List.generate(CalendarElemetOptions.kWeekDaysCount, (i) {
       final index = week * CalendarElemetOptions.kWeekDaysCount + i;
+
       Tuple2<int, bool> day = const Tuple2(0, false);
       final consideringPrevMonth = begin.date + index;
       if (consideringPrevMonth <= begin.daysInMonth && begin.date != 1) {
@@ -128,18 +129,21 @@ class CalendarCell extends StatelessWidget {
           context
               .read<CalendarBloc>()
               .add(SelectDateEvent(selectedDate: currentDate.dateTime));
-          final targetEvents = CalendarUtils.calculateAvailableEventsForDate(
-              eventList, currentDate);
-          context
-              .read<ScheduleBloc>()
-              .add(SelectSchedulesEvent(schedules: targetEvents));
+          context.read<ScheduleBloc>().add(SelectSchedulesEvent(
+              schedules: CalendarUtils.calculateAvailableEventsForDate(
+                  eventList, currentDate)));
         },
         child: Container(
           width: itemWidth,
           height: itemHeight,
           decoration: BoxDecoration(
-              color: !day.item2 ? Colors.grey.shade100 : Colors.white,
-              border: Border.all(color: Colors.grey.shade400, width: 0)),
+            color: !day.item2 ? Colors.grey.shade100 : Colors.white,
+            border: Border(
+              top: BorderSide(color: Colors.grey.shade400, width: 0),
+              left: BorderSide(color: Colors.grey.shade400, width: 0),
+              right: BorderSide(color: Colors.grey.shade400, width: 0),
+            ),
+          ),
           alignment: Alignment.topCenter,
           child: Stack(
             children: [
@@ -182,7 +186,7 @@ class CalendarCell extends StatelessWidget {
               CalendarSelectedDateSelector((selectedDate) {
                 final bool isSelected = CalendarUtils.isSelectedDate(
                     index, selectedDate,
-                    begin: begin, end: end);
+                    begin: begin);
                 return Container(
                   decoration: isSelected
                       ? BoxDecoration(
@@ -214,30 +218,5 @@ class CalendarCell extends StatelessWidget {
       );
     });
     return days;
-  }
-
-  void _showSchdulesModal(
-      {required List<Schedule> events,
-      required DateTime day,
-      required BuildContext context}) {
-    if (events.isEmpty) {
-      return;
-    }
-    context.read<ScheduleBloc>().add(SelectSchedulesEvent(schedules: events));
-
-    showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-        ),
-        // backgroundColor: Colors.white,
-        builder: (context) {
-          return MultiBlocProvider(providers: [
-            BlocProvider.value(
-              value: context.read<ScheduleBloc>(),
-            ),
-          ], child: const SchedulesBottomModal());
-        });
   }
 }

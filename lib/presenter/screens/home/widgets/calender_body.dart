@@ -10,14 +10,12 @@ import '../../../../core/enums/week_day.dart';
 
 class CalendarBody extends StatelessWidget {
   final Jiffy begin;
-  final Jiffy end;
   final int beginOffset;
   final int daysInMonth;
   final DateTime displayMonth;
   const CalendarBody(
       {super.key,
       required this.begin,
-      required this.end,
       required this.beginOffset,
       required this.daysInMonth,
       required this.displayMonth});
@@ -37,7 +35,6 @@ class CalendarBody extends StatelessWidget {
             children: [
               CalendarCell(
                 begin: begin,
-                end: end,
                 itemHeight: itemHeight,
                 itemWidth: itemWidth,
                 beginOffset: beginOffset,

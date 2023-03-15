@@ -10,17 +10,17 @@ class ColorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraint) {
       return ClipRRect(
-          borderRadius: getBorderRadius(index: index),
+          borderRadius: _getBorderRadius(index: index),
           child: Container(
             height: constraint.maxHeight,
             width: constraint.maxHeight,
-            color: getColor(
+            color: _getColor(
                 colorScheme: appTheme.themeData.colorScheme, index: index),
           ));
     });
   }
 
-  BorderRadius getBorderRadius({required int index}) {
+  BorderRadius _getBorderRadius({required int index}) {
     if (index == 0) {
       return const BorderRadius.only(topLeft: Radius.circular(8));
     } else if (index == 1) {
@@ -32,7 +32,7 @@ class ColorCard extends StatelessWidget {
     }
   }
 
-  Color getColor({required ColorScheme colorScheme, required int index}) {
+  Color _getColor({required ColorScheme colorScheme, required int index}) {
     if (index == 0) {
       return colorScheme.primary;
     } else if (index == 1) {

@@ -4,6 +4,7 @@ import 'package:today_mate_clean/presenter/screens/home/widgets/app_theme_body.d
 import 'package:today_mate_clean/presenter/screens/home/widgets/app_theme_header.dart';
 
 import '../../../../configs/constants.dart';
+import '../../../../configs/routes.dart';
 import '../../../../core/enums/week_day.dart';
 import '../../../../states/app_theme/app_theme_cubit.dart';
 
@@ -19,7 +20,19 @@ class _AppThemesScreenState extends State<AppThemesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0.3,
+        backgroundColor: Colors.white,
+        leading: const BackButton(
+          color: Colors.black,
+        ),
+        automaticallyImplyLeading: true,
+        title: const Text(
+          "테마 컬러",
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 17),
+        ),
+      ),
       body: LayoutBuilder(builder: (context, constraints) {
         final double itemWidth = constraints.maxWidth / WeekDay.values.length;
         final double itemHeight = itemWidth * 2.13;

@@ -17,12 +17,10 @@ class CalendarUtils {
   }
 
   static bool isSelectedDate(int index, DateTime? selectedDate,
-      {required Jiffy begin, required Jiffy end}) {
+      {required Jiffy begin}) {
     final selectedDay = Jiffy(selectedDate);
-    if (selectedDay.isSameOrAfter(begin) && selectedDay.isSameOrBefore(end)) {
-      if (Jiffy(begin).add(days: index).isSame(selectedDay)) {
-        return true;
-      }
+    if (Jiffy(begin).add(days: index).isSame(selectedDay)) {
+      return true;
     }
 
     return false;
@@ -141,7 +139,7 @@ class CalendarUtils {
     return EventProperties(
         begin: beginDay,
         end: endDay,
-        name: event.description,
+        name: event.title,
         backgroundColor: extractLevelColor(event.level, colorScheme));
   }
 

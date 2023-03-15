@@ -59,6 +59,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     try {
       final newSelectedSchdules = await scheduleUseCases.updateScheduleUseCase(
           event.schedule, state.selectedSchedules);
+
       final schedules = await scheduleUseCases.getSchedulesUseCase();
       emit(state.copyWith(
           schedules: schedules, selectedSchedules: newSelectedSchdules));

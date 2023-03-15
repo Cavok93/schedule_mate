@@ -76,17 +76,23 @@ class EventsOverlay extends StatelessWidget {
       for (var j = 0; j < eventLines[i].events.length; j++) {
         var item = eventLines[i].events[j];
         if (i < CalendarElemetOptions.kMaxLines - 1) {
+          final double topPosition = i * lineHeight;
+          final double leftPosition =
+              (item.begin - 1) * itemWidth + (padding?.left ?? 0);
+          final double rightPosition =
+              (kWeekDaysCount - item.end) * itemWidth + (padding?.right ?? 0);
+          final double drawHeight = lineHeight -
+              itemHeight / CalendarElemetOptions.kDistanceBetweenEventsCoef;
+          final double drawWidth = itemWidth * item.size() - kLinesPadding;
+
           widgets.add(
             Positioned(
-              top: i * lineHeight,
-              left: (item.begin - 1) * itemWidth + (padding?.left ?? 0),
-              right: (kWeekDaysCount - item.end) * itemWidth +
-                  (padding?.right ?? 0),
+              top: topPosition,
+              left: leftPosition,
+              right: rightPosition,
               child: SizedBox(
-                height: lineHeight -
-                    itemHeight /
-                        CalendarElemetOptions.kDistanceBetweenEventsCoef,
-                width: itemWidth * item.size() - kLinesPadding,
+                height: drawHeight < 0 ? 0 : drawHeight,
+                width: drawWidth < 0 ? 0 : drawWidth,
                 child: Container(
                   color: item.backgroundColor,
                   padding: const EdgeInsets.only(left: 3),

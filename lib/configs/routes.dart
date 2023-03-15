@@ -5,6 +5,7 @@ import 'package:today_mate_clean/presenter/screens/splash/splash.dart';
 
 import '../core/fade_page_route.dart';
 import '../presenter/screens/home/home.dart';
+
 import '../presenter/screens/home/sections/compose.dart';
 
 enum Routes { splash, home, form, themes }
@@ -32,31 +33,20 @@ class _Paths {
 
 class AppNavigator {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case _Paths.splash:
-        return FadeRoute(page: const SplashScreen());
+        return MaterialPageRoute(builder: (context) => const SplashScreen());
 
       case _Paths.themes:
-        return FadeRoute(page: const AppThemesScreen());
-
-      // case _Paths.pokemonInfo:
-      //   return FadeRoute(page: PokemonInfo());
-
-      // case _Paths.typeEffectsScreen:
-      //   return FadeRoute(page: TypeEffectScreen());
-
-      // case _Paths.itemsList:
-      //   return FadeRoute(page: ItemsScreen());
+        return MaterialPageRoute(builder: (context) => const AppThemesScreen());
 
       case _Paths.form:
-        return FadeRoute(
-            page: ComposeScreen(
+        return MaterialPageRoute(
+            builder: (context) => ComposeScreen(
                 targetSchedule: (settings.arguments != null)
                     ? (settings.arguments as Schedule)
                     : null));
-
       case _Paths.home:
       default:
         return FadeRoute(page: const HomeScreen());

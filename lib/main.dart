@@ -17,6 +17,7 @@ import 'package:today_mate_clean/domain/usecases/schedule/update_schedule_usecas
 import 'package:today_mate_clean/domain/usecases/schedule_usecases.dart.dart';
 import 'package:today_mate_clean/states/app_theme/app_theme_cubit.dart';
 import 'package:today_mate_clean/states/calendar/calendar_bloc.dart';
+
 import 'package:today_mate_clean/states/schedule/schedule_bloc.dart';
 import 'app.dart';
 import 'data/repositories/app_theme_repository_impl.dart';
@@ -79,7 +80,7 @@ void main() async {
                 ),
               ),
             ),
-          )
+          ),
         ],
         child: const ScheduleApp(),
       )));

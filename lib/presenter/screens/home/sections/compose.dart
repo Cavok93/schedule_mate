@@ -57,6 +57,13 @@ class _ComposeScreenState extends State<ComposeScreen> {
           iconTheme: IconThemeData(color: colorScheme.primary),
           backgroundColor: colorScheme.onPrimary,
           elevation: 0.3,
+          title: Text(
+            widget.targetSchedule != null ? "수정" : "할 일",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.primary,
+                fontSize: 17),
+          ),
           actions: [
             TextButton(
                 onPressed: () async {
@@ -98,82 +105,155 @@ class _ComposeScreenState extends State<ComposeScreen> {
                 ))
           ],
         ),
-        body: CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-              sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                TextFormField(
-                  controller: _titleController,
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  controller: _descriptionController,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("시작"),
-                    TextButton(
-                      onPressed: () {
-                        _showDateModal(context, true, initialDate: _begin);
-                      },
-                      style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          minimumSize: Size.zero,
-                          alignment: Alignment.center),
-                      child: Text(DateFormat('yy.MM.dd').format(_begin)),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("종료"),
-                    TextButton(
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                  TextFormField(
+                    style: const TextStyle(fontSize: 24),
+                    decoration: InputDecoration(
+                        hintStyle: TextStyle(
+                            fontSize: 24, color: Colors.grey.shade400),
+                        hintText: "제목을 입력해주세요.",
+                        fillColor: Colors.white),
+                    controller: _titleController,
+                  ),
+                  const SizedBox(height: 30.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("시작"),
+                      TextButton(
                         onPressed: () {
-                          _showDateModal(context, false, initialDate: _end);
+                          _showDateModal(context, true, initialDate: _begin);
                         },
                         style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             minimumSize: Size.zero,
                             alignment: Alignment.center),
-                        child: Text(DateFormat('yy.MM.dd').format(_end)))
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                    children: [1, 2, 3, 4]
-                        .map((e) => InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _level = e;
-                                });
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.all(8),
-                                color: e == _level ? Colors.blue : Colors.white,
-                                padding: const EdgeInsets.all(8),
-                                child: Text("$e"),
-                              ),
-                            ))
-                        .toList()),
-                // if (widget.targetSchedule != null)
-                //   _buildDeleteButton(
-                //       colorScheme, widget.targetSchedule?.id ?? 0),
-              ])),
-            )
-          ],
+                        child: Text(DateFormat('yy.MM.dd').format(_begin)),
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("종료"),
+                      TextButton(
+                          onPressed: () {
+                            _showDateModal(context, false, initialDate: _end);
+                          },
+                          style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              minimumSize: Size.zero,
+                              alignment: Alignment.center),
+                          child: Text(DateFormat('yy.MM.dd').format(_end)))
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                      children: [1, 2, 3, 4]
+                          .map((e) => InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _level = e;
+                                  });
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.all(8),
+                                  color:
+                                      e == _level ? Colors.blue : Colors.white,
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text("$e"),
+                                ),
+                              ))
+                          .toList()),
+                  const SizedBox(height: 30.0),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isCompleted = false;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: !_isCompleted
+                                  ? Colors.blueGrey.shade200
+                                  : null,
+                              border: Border.all(
+                                  color: Colors.blueGrey, width: 0.8),
+                              borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          alignment: Alignment.center,
+                          child: const Text("미완료"),
+                        ),
+                      )),
+                      const SizedBox(width: 16.0),
+                      Expanded(
+                          child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isCompleted = true;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: _isCompleted
+                                  ? Colors.blueGrey.shade200
+                                  : null,
+                              border: Border.all(
+                                  color: Colors.blueGrey, width: 0.8),
+                              borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          alignment: Alignment.center,
+                          child: const Text("완료"),
+                        ),
+                      ))
+                    ],
+                  ),
+                  const SizedBox(height: 30.0),
+                  const Text(
+                    "메모",
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  const SizedBox(height: 12.0),
+                  TextFormField(
+                    style: const TextStyle(fontSize: 16.0),
+                    controller: _descriptionController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      hintText: "메모",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Color.fromRGBO(245, 246, 248, 1),
+                    ),
+                  ),
+                ])),
+              )
+            ],
+          ),
         ));
   }
 
