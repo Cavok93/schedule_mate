@@ -4,7 +4,6 @@ import 'package:today_mate_clean/presenter/screens/home/widgets/app_theme_body.d
 import 'package:today_mate_clean/presenter/screens/home/widgets/app_theme_header.dart';
 
 import '../../../../configs/constants.dart';
-import '../../../../configs/routes.dart';
 import '../../../../core/enums/week_day.dart';
 import '../../../../states/app_theme/app_theme_cubit.dart';
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:today_mate_clean/configs/constants.dart';
 import 'package:today_mate_clean/domain/entities/schedule/schedule.dart';
+import 'package:today_mate_clean/presenter/modals/compose_modal.dart';
 import 'package:today_mate_clean/states/schedule/schedule_bloc.dart';
-import '../../configs/routes.dart';
+
 import '../../core/extensions/date_time.dart';
 
 class ScheduleCard extends StatelessWidget {
@@ -55,10 +57,14 @@ class ScheduleCard extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      AppNavigator.push(Routes.form, schedule);
+                      _showComposeModal(context, schedule);
+                      // AppNavigator.push(Routes.form, schedule);
                     },
                     child: Container(
-                      color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       padding: const EdgeInsets.only(
                           left: 0, top: 12, right: 12, bottom: 12),
                       child: Column(
@@ -93,7 +99,7 @@ class ScheduleCard extends StatelessWidget {
                           }),
                           const SizedBox(height: 8.0),
                           Text(
-                            "${DateTimeX(schedule.begin).format()} - ${DateTimeX(schedule.end).format()}",
+                            "${KRTime(schedule.begin).format()} - ${KRTime(schedule.end).format()}",
                             style: const TextStyle(fontSize: 12.0),
                           ),
                         ],
@@ -103,27 +109,19 @@ class ScheduleCard extends StatelessWidget {
                 ),
               ],
             ),
-            // Align(
-            //   alignment: Alignment.topRight,
-            //   child:
-            //       _buildDeleteButton(context, colorScheme, schedule.id ?? 0),
-            // )
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDeleteButton(
-      BuildContext context, ColorScheme colorScheme, int id) {
-    return IconButton(
-      onPressed: () async {
-        callBack(id);
-      },
-      icon: const Icon(Icons.delete),
-      color: colorScheme.primary,
-      constraints: const BoxConstraints(),
-      iconSize: 50,
-    );
+  void _showComposeModal(BuildContext context, Schedule? targetSchedule) {
+    showBarModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        builder: (_) => ComposeModal(targetSchedule: targetSchedule));
   }
 }

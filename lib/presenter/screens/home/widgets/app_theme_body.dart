@@ -1,9 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:today_mate_clean/presenter/widgets/app_theme_card.dart';
-
 import '../../../../states/app_theme/app_theme_selector.dart';
 
 class AppThemeBody extends StatelessWidget {

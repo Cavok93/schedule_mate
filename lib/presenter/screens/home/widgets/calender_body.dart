@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:today_mate_clean/configs/constants.dart';
@@ -23,31 +21,30 @@ class CalendarBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      const int kMaxWeekPerMoth = 6;
-      final itemWidth = constraints.maxWidth / WeekDay.values.length;
-      final itemHeight = constraints.maxHeight / kMaxWeekPerMoth;
       return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         child: SizedBox(
-          height: itemHeight * kMaxWeekPerMoth,
+          height: constraints.maxHeight,
           child: Stack(
             children: [
               CalendarCell(
                 begin: begin,
-                itemHeight: itemHeight,
-                itemWidth: itemWidth,
+                itemHeight: constraints.maxHeight /
+                    CalendarElemetOptions.kMaxWeekPerMoth,
+                itemWidth: constraints.maxWidth / WeekDay.values.length,
                 beginOffset: beginOffset,
                 daysInMonth: daysInMonth,
                 displayMonth: displayMonth,
-                topPadding: itemWidth / 2,
+                topPadding: constraints.maxWidth / WeekDay.values.length / 2,
                 maxLines: CalendarElemetOptions.kMaxLines,
               ),
               EventsOverlay(
                   begin: begin,
-                  topPadding: itemWidth / 2,
-                  itemWidth: itemWidth,
-                  itemHeight: itemHeight,
+                  topPadding: constraints.maxWidth / WeekDay.values.length / 2,
+                  itemWidth: constraints.maxWidth / WeekDay.values.length,
+                  itemHeight: constraints.maxHeight /
+                      CalendarElemetOptions.kMaxWeekPerMoth,
                   maxLines: CalendarElemetOptions.kMaxLines),
             ],
           ),

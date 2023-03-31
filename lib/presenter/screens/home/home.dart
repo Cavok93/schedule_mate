@@ -9,7 +9,9 @@ import '../../../../core/enums/week_day.dart';
 import '../../../../domain/entities/calendar/day_props.dart';
 import '../../../../states/calendar/calendar_selector.dart';
 import '../../../../states/schedule/schedule_bloc.dart';
-import 'sections/calendar_page.dart';
+import '../../../core/utils/calendar_utils.dart';
+import '../../../states/calendar/calendar_bloc.dart';
+import 'sections/calendar_page_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late int _initialPage;
   late int _pageCount;
   ScheduleBloc get scheduleBloc => context.read<ScheduleBloc>();
+  CalendarBloc get calendarBloc => context.read<CalendarBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +80,60 @@ class _HomeScreenState extends State<HomeScreen> {
         }),
         actions: [
           GestureDetector(
+            onTap: () {
+              if (_pageController.hasClients) {
+                _pageController.animateToPage(_initialPage,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeIn);
+              }
+              calendarBloc.add(SelectDateEvent(
+                  selectedDate: DateTime.utc(DateTime.now().year,
+                      DateTime.now().month, DateTime.now().day)));
+              if (scheduleBloc.state.selectedSchedules.isNotEmpty) {
+                scheduleBloc.add(SelectSchedulesEvent(
+                    schedules: CalendarUtils.calculateAvailableEventsForDate(
+                        scheduleBloc.state.schedules, Jiffy(DateTime.now()))));
+              }
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      color: const Color.fromARGB(255, 242, 242, 247),
+                      borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0, vertical: 6.0),
+                  child: Row(
+                    children: const [
+                      IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.refresh_sharp),
+                        constraints: BoxConstraints(),
+                        padding: EdgeInsets.all(0.0),
+                        iconSize: 18.0,
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        width: 2.0,
+                      ),
+                      Text(
+                        "오늘",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
               onTap: _showSettingModal,
               child: Container(
                 height: AppBar().preferredSize.height,
@@ -86,58 +143,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   "assets/images/settings.svg",
                 ),
               ))
-          // IconButton(
-          //     onPressed: () {
-          //       AppNavigator.push(Routes.themes);
-          //     },
-          //     icon: Icon(
-          //       Icons.color_lens_sharp,
-          //       color: colorScheme.primary,
-          //     )),
-          // IconButton(
-          //     onPressed: () {
-          //       AppNavigator.push(Routes.form, null);
-          //     },
-          //     icon: Icon(
-          //       Icons.add,
-          //       color: colorScheme.primary,
-          //       // color: Colors.red,
-          //     )),
-          // TextButton(
-          //   onPressed: () {
-          //     if (_pageController.hasClients) {
-          //       _pageController.animateToPage(_initialPage,
-          //           duration: const Duration(milliseconds: 300),
-          //           curve: Curves.easeIn);
-          //     }
-          //     context.read<CalendarBloc>().add(SelectDateEvent(
-          //         selectedDate: DateTime.utc(DateTime.now().year,
-          //             DateTime.now().month, DateTime.now().day)));
-          //   },
-          //   child: Text(
-          //     "오늘",
-          //     style: TextStyle(
-          //         color: colorScheme.primary, fontWeight: FontWeight.w500),
-          //   ),
-          // )
         ],
       ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CalendarPageView(
-                pageController: _pageController,
-                initialPage: _initialPage,
-                pageCount: _pageCount),
-          ],
-        ),
+      body: Stack(
+        children: [
+          CalendarPageView(
+              pageController: _pageController,
+              initialPage: _initialPage,
+              pageCount: _pageCount),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: colorScheme.onPrimary,
-          ),
-          onPressed: () {}),
     );
   }
 

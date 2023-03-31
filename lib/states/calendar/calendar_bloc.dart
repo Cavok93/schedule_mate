@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
-
 import 'package:today_mate_clean/states/schedule/schedule_bloc.dart';
 import '../../domain/entities/schedule/schedule.dart';
 import 'calendar_state.dart';

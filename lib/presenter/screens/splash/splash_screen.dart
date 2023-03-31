@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:today_mate_clean/configs/routes.dart';
+
+import '../home/home.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,7 +15,10 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(milliseconds: 1000));
-      await AppNavigator.replaceWith(Routes.home);
+      // await AppNavigator.replaceWith(Routes.home);()
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => const HomeScreen()));
     });
   }
 

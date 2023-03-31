@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:today_mate_clean/presenter/screens/home/widgets/calender_sample_header.dart';
-import 'package:today_mate_clean/states/app_theme/app_theme_selector.dart';
 
-import 'week_row.dart';
 import 'calendar_sample.dart';
+import 'week_row.dart';
 
 class AppThemeHeader extends StatelessWidget {
   final double itemHeight;
