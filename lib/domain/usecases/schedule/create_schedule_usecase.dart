@@ -11,10 +11,10 @@ class CreateScheduleUseCase {
       Schedule schedule, List<Schedule> selectedSchedules) async {
     try {
       final createdSchedule = await scheduleRepository.createSchedule(schedule);
-      if (selectedSchedules.isNotEmpty) {
-        return [...selectedSchedules, createdSchedule];
-      }
-      return [];
+      // if (selectedSchedules.isNotEmpty) {
+      return [...selectedSchedules, createdSchedule];
+      // }
+      // return [];
     } catch (e) {
       rethrow;
     }

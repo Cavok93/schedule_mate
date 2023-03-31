@@ -2,7 +2,6 @@
 import 'package:today_mate_clean/domain/usecases/schedule/create_schedule_usecase.dart';
 import 'package:today_mate_clean/domain/usecases/schedule/delete_schedule_usecase.dart';
 import 'package:today_mate_clean/domain/usecases/schedule/get_schedules_usecase.dart';
-
 import 'package:today_mate_clean/domain/usecases/schedule/update_schedule_usecase.dart';
 
 class ScheduleUseCases {

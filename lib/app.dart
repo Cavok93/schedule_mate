@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:today_mate_clean/configs/routes.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:today_mate_clean/presenter/screens/splash/splash_screen.dart';
 import 'package:today_mate_clean/states/app_theme/app_theme_cubit.dart';
 import 'package:today_mate_clean/states/app_theme/app_theme_selector.dart';
 
@@ -26,16 +27,23 @@ class _ScheduleAppState extends State<ScheduleApp> {
 
   Widget _buildApp() {
     return SelectAppThemeSelector((selectedTheme) => MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('ko', 'KO'),
+            Locale('en', 'US'),
+          ],
           color: Colors.white,
           title: 'ScheduleApp App',
-          theme: selectedTheme.themeData,
+          debugShowCheckedModeBanner: false,
+          theme: selectedTheme.themeData.copyWith(
+              textTheme: selectedTheme.themeData.textTheme
+                  .apply(fontFamily: "NotoSans")),
           themeMode: ThemeMode.system,
-          navigatorKey: AppNavigator.navigatorKey,
-          onGenerateRoute: AppNavigator.onGenerateRoute,
-          builder: (context, child) {
-            if (child == null) return const SizedBox();
-            return child;
-          },
+          home: const SplashScreen(),
         ));
   }
 

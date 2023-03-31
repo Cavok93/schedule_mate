@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:today_mate_clean/configs/routes.dart';
+
+import '../screens/home/sections/app_themes_screen.dart.dart';
 
 class SettingModal extends StatelessWidget {
   const SettingModal({super.key});
@@ -22,7 +21,8 @@ class SettingModal extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  AppNavigator.pop();
+                  // AppNavigator.pop();
+                  Navigator.pop(context);
                 },
                 icon: const Icon(
                   Icons.close,
@@ -39,7 +39,10 @@ class SettingModal extends StatelessWidget {
                   const SizedBox(height: 16),
                   GestureDetector(
                     onTap: () {
-                      AppNavigator.push(Routes.themes);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const AppThemesScreen()));
                     },
                     child: Container(
                       color: Colors.white,
